@@ -1,0 +1,70 @@
+# Stick this on any VPS, change the variables as required then run in a new screen
+# https://help.ubuntu.com/community/Screen
+
+# VPSCheap (https://vpscheap.net/) do small VPS instances for $20 per year, which is perfectly fine for this.
+# Other providers are available.
+
+# You will need to have tweepy installed, which requires pip
+# http://stackoverflow.com/questions/39710454/how-can-i-install-a-tweepy-package-via-pip
+# http://docs.tweepy.org/en/v3.5.0/install.html
+
+# Also, yay python!
+
+import tweepy # lets us tweet
+import time # lets us use time
+from random import uniform # lets us use a random float between two numbers
+
+# Twitter authentication variables: Change *** to the strings provided at https://apps.twitter.com/
+consumer_key = "***"
+consumer_secret = "***"
+access_token = "***"
+access_token_secret = "***"
+
+# Use twitter auth variables to set up access to twitter
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+
+twitter = tweepy.API(auth)
+
+# Sleep length
+wait = 0
+
+# Open file that has list of tweets, one per line. Must either be in same directory or be given absolute path.
+# Line length must be less than 140 characters (obviously). Could check this programatically but meh.
+f=open('file.txt')
+
+# Read each line
+lines=f.readlines()
+
+# Current line counter
+i = 0
+
+# Total number of lines in file. Change before use. It would be more elegant to work this out programatically but meh
+line_max = 0
+
+# Minimum integer of hours between tweets. Change before use.
+rand_min = 0
+
+# Maximum integer of hours between tweets. Change before use.
+rand_max = 0
+
+# While the current line is less than the maximum line
+while i < line_max:
+
+    # Generate a random number between between the limits then multiply it by 3600 to get a value in seconds
+    wait = uniform(rand_min, rand_max) * 3600
+
+    # Show how long we will wait before sending the next tweet, converted to hours for readability
+    print "Waiting for " + str(wait/3600) + " hours"
+
+    # Wait that long. Sleep is not a great solution but we do not need to do anything else in this case so it will do.
+    time.sleep(wait)
+
+    # Send the tweet using the line we are currently on plus some other text
+    twitter.update_status(lines[i] +  " Some other text ")
+
+    # Show the line number that we just tweeted
+    print "Tweet " + i + " sent"
+
+    # Increase the line number counter by one
+    i = i + 1
