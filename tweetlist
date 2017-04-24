@@ -64,7 +64,7 @@ while i < line_max:
     twitter.update_status(lines[i] +  " Some other text ")
 
     # Show the line number that we just tweeted
-    print "Tweet " + i + " sent"
+    print "Tweet " + str(i) + " sent"
 
     # Increase the line number counter by one
     i = i + 1
